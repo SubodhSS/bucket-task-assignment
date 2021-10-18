@@ -1,7 +1,13 @@
 import React from "react";
-import { Formik } from 'formik';
+import axios from 'axios';
+import {
+    useHistory,
+  } from 'react-router-dom';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 const Login = () => {
+    const history = useHistory();
+
         return (
             <div>
                 <h3>Sign In</h3>
@@ -19,10 +25,15 @@ const Login = () => {
                         return errors;
                     }}
                     onSubmit={(values, { setSubmitting }) => {
-                        setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2));
-                        setSubmitting(false);
-                        }, 400);
+                        axios.post(`http://localhost:3000/login`, values )
+                        .then(res => {
+                            localStorage.setItem('token', res.data.data)
+                            history.push({
+                                pathname: '/tasks',
+                            });
+                        }).catch(e =>{
+                            console.log('Error: ', e);
+                        });
                     }}
                 >
                     {({
@@ -36,44 +47,36 @@ const Login = () => {
                         /* and other goodies */
                     }) => (
                         
-                        <form onSubmit={handleSubmit}>
-
-                            <div className="form-group">
-                                <label>Email address</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    className="form-control" 
-                                    placeholder="Enter email"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.email}
-                                />
-                                {errors.email && touched.email && errors.email}
-                            </div>
-
-                            <div className="form-group mt-2">
-                                <label>Password</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    className="form-control" 
-                                    placeholder="Enter password"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    value={values.password}
-                                />
-                                {errors.password && touched.password && errors.password}
-                            </div>
-
-                            <button 
-                                type="submit" 
+                        <Form>
+                            <Field 
+                                type="email"
+                                name="email"
+                                className="form-control"
+                                placeholder="Enter email"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                            <ErrorMessage 
+                                name="email" 
+                                component="div" 
+                            />
+                            <Field
+                                type="password"
+                                name="password"
+                                className="form-control mt-2"
+                                placeholder="Enter password"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                            <ErrorMessage name="password" component="div" />
+                            <button
+                                type="submit"
                                 className="btn btn-primary btn-block mt-2"
-                                disabled={isSubmitting}
+                                // disabled={isSubmitting}
                             >
                                 Submit
                             </button>
-                        </form>
+                        </Form>
                     )}
                 </Formik>
             </div>

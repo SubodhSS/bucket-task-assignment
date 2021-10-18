@@ -5,6 +5,11 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Login from "./components/login.component";
 import SignUp from "./components/signup.component";
+import BucketsList from "./components/bucket.component";
+import TasksList from "./components/tasks.component";
+import BucketsTasksList from "./components/tasks.component";
+import CreateBuckets from "./components/bucket.create.component";
+import CreateTasks from "./components/tasks.create.component";
 
 function App() {
   return (<Router>
@@ -30,6 +35,11 @@ function App() {
             <Route exact path='/' component={Login} />
             <Route path="/sign-in" component={Login} />
             <Route path="/sign-up" component={SignUp} />
+            <Route path="/tasks/:id" exact component={CreateTasks} />
+            <Route path="/tasks" component={TasksList} />
+            <Route path="/buckets/:bucketId/tasks" component={BucketsTasksList} />
+            <Route path="/buckets/:id" exact component={CreateBuckets} />
+            <Route path="/buckets" component={BucketsList} />
           </Switch>
         </div>
       </div>
